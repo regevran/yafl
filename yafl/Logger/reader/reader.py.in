@@ -1,0 +1,70 @@
+#!/bin/python
+
+import struct
+import sys
+import time
+
+constants = {
+        '0xcdcdcdcdcdcdcdcd':"#",
+        '0x00000000ababab00':"DEBUG",
+        '0x00000000ababab01':"ERROR",
+        '0x00000000ababab02':"WARNING",
+        '0x00000000ababab03':"INFO",
+}
+
+fileMap = {
+@file_mapping@
+}
+
+
+f = open( sys.argv[1], "rb" )
+try:
+    fieldsInRecord = 25
+    fieldLength   = 8 
+
+    recordBytes = fieldsInRecord * fieldLength
+
+    headerFields = f.read( recordBytes )
+
+    while headerFields != "":
+
+        header     = struct.unpack( "LLLLLLLLLLLLLLLLLLLLLLLLL", headerFields[0:recordBytes] )
+
+        epochS     = long( header[0] / 1000 )
+        epochMs    = long( header[0] % 1000 )
+
+        fileValue  = header[1]
+        fileKey    = "{0:#0{1}x}".format( fileValue, 18 )
+        fileRecord = fileMap[ fileKey ]
+        fileName   = fileRecord[ 0 ]
+
+        lineNumber = header[2]
+
+        debugLevel = constants[ "{0:#0{1}x}".format( header[3], 18 ) ]
+
+        threadNo   = "{0:#0{1}x}".format( header[4], 18 ) 
+
+        module     = fileRecord[1][ "{0:#0{1}x}".format( header[5], 18) ]
+
+        timeStr  = time.strftime( '%d/%m/%Y %H:%M:%S', time.localtime( epochS ) ) + "." + str( epochMs )
+        textLine = timeStr + "|" + str(fileName) + "|" + str(lineNumber) + "|" + str(debugLevel) + "|" + str(threadNo) + "|" + str(module) + "|"
+
+        for field in header[ 6:fieldsInRecord ]:
+            
+            keyORvalue = "{0:#0{1}x}".format( field, 18 )
+
+            if keyORvalue in fileRecord[ 1 ]:
+                textLine += fileRecord[ 1 ][ keyORvalue ] + " " 
+
+            elif keyORvalue in constants:
+                textLine += constants[ keyORvalue ]
+
+            else:
+                textLine += str( field )
+
+        print textLine
+
+        headerFields = f.read( recordBytes )
+finally:
+    f.close()
+

@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# expecting the following variables to be set by the caller to cmake-configure
+# SOURCE_FILE               ==      ${SOURCE_FILE}
+# TARGET_FILE               ==      ${TARGET_FILE}
+# MAP_TARGET_FILE           ==      ${MAP_TARGET_FILE}
+# YAFL_PREPROCESSOR_DIR    ==      ${YAFL_PREPROCESSOR_DIR}
+
+fileId=$(md5sum ${SOURCE_FILE} | head -c16)
+echo -n "'0x$fileId':[\"${SOURCE_FILE}\",{" >${MAP_TARGET_FILE}
+
+varForWait=$(\
+    /bin/m4 \
+    --prefix-builtins \
+    -DCOMPILED_FILE=$fileId \
+    ${YAFL_PREPROCESSOR_DIR}/yaflpp.m4 \
+    ${YAFL_PREPROCESSOR_DIR}/modules.m4 \
+    ${SOURCE_FILE} \
+    | \
+    1>/dev/null tee \
+    >(${YAFL_PREPROCESSOR_DIR}/code_area.sed >${TARGET_FILE}) \
+    >(${YAFL_PREPROCESSOR_DIR}/map_area.sed  >>${MAP_TARGET_FILE}))
+
+wait
+
+echo "}]," >>${MAP_TARGET_FILE}
+
