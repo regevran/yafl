@@ -34,3 +34,6 @@
 # vim stuff
 *.un~
 *.sw[po]
+
+# build
+gcc/
