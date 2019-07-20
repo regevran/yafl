@@ -9,7 +9,7 @@ this project demonstartes a mechanism to create an exteremly fast and low foot p
 * reader
 # Flow
 * write your log
-		* LOG( "hello world #", number );
+	* LOG( "hello world #", number );
 * cmake
 		* m4 preprocess generates
   		* log messages with numbers
