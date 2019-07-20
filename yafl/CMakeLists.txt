@@ -39,6 +39,8 @@ set(
 # directories
 subdirs( 
     infra
+    logger
+    m4
 )
 
 

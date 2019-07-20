@@ -1,9 +1,9 @@
 
-#include "Logger/inc/log.h"
+#include "logger/inc/log.h"
 #include "series.h"
 #include <thread>
 #include <log4cpp/PropertyConfigurator.hh>
-#include "Logger/inc/a.h"
+#include "logger/inc/a.h"
 
 Series::Series( 
             unsigned long startCountAt,
