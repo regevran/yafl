@@ -49,7 +49,8 @@ set(
 
 # directories
 subdirs( 
-    infra
+    infra/inc/execution
+    infra/
     logger/m4log
 )
 

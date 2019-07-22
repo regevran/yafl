@@ -25,10 +25,10 @@ add_library(
     ${source}
 )
 
-target_link_libraries( 
-    ${target}
-    ${GLOBAL_PROJECT}_infra
-)
+#target_link_libraries( 
+#    ${target}
+#    ${GLOBAL_PROJECT}_infra
+#)
 
 #add_dependencies(
 #    ${target}
