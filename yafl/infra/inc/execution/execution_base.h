@@ -10,13 +10,13 @@
 #define EXECUTION_BASE_H
 
 #include <thread>
-#include "joinable.h"
+#include "infra/inc/joinable.h"
 
-namespace rf {
+namespace infra {
 
 template<class E> class OwnerExecution;
 
-class ExecutionBase : public Joinable
+class ExecutionBase : public infra::Joinable
 {
     public:
         ExecutionBase();

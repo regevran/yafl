@@ -17,10 +17,10 @@
 // Include files
 //------------------------------------------------------------------------------
 
-#include "execution/execution_forever.h"
-#include "operation/operation.h"
+#include "infra/inc/execution/execution_forever.h"
+#include "infra/inc/operation/operation.h"
 
-namespace rf {
+namespace infra {
 
 ExecutionForever::ExecutionForever( 
     Operation& loopOp, 

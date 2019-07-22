@@ -1,0 +1,81 @@
+
+
+# expected variables to be set:
+# files_to_precompile   - a list of files that need to be precompiled
+# target                - the name of the target executable or library (cmake target)
+
+
+foreach( bare_file ${files_to_precompile} ) 
+
+    set(
+        src_file
+        ${CMAKE_CURRENT_SOURCE_DIR}/${bare_file}
+    )
+
+    set(
+        target_file
+        ${CMAKE_CURRENT_BINARY_DIR}/${bare_file}
+    ) 
+
+    set(
+        map_target_file
+        ${CMAKE_CURRENT_BINARY_DIR}/${bare_file}.map
+    )
+
+    set(
+        generator_sh_file
+        ${CMAKE_CURRENT_BINARY_DIR}/${bare_file}.gen
+    )
+
+    # set the variables for the generator
+    set( source_file        ${src_file} )
+    set( target_file        ${target_file} )
+    set( map_target_file    ${map_target_file} )
+
+    # confiure the generator
+    if ( NOT EXISTS ${generator_sh_file} )
+        message( "configuring  ${generator_sh_file}" )
+        configure_file( 
+            ${YAFL_SOURCE_DIR}/m4/generate_code_and_map.sh.in
+            ${generator_sh_file}
+        )
+    endif( NOT EXISTS ${generator_sh_file} )
+
+    string( REPLACE "/" "_" bare_file ${CMAKE_CURRENT_SOURCE_DIR}/${bare_file} )
+
+    set(
+        custom_target
+        ${bare_file}_precompile
+    ) 
+
+    if ( NOT EXISTS ${target_file} )
+        message( "gnerating ${target_file}" )
+        execute_process(
+            COMMAND             ${generator_sh_file}
+        )
+    endif ( NOT EXISTS ${target_file} )
+
+
+    add_custom_command(
+        OUTPUT              ${target_file}
+#        COMMAND             ${generator_sh_file}
+        MAIN_DEPENDENCY     ${src_file}
+        DEPENDS             ${generator_sh_file}
+    )
+
+    add_custom_target(
+        ${custom_target}
+#        #        COMMAND             ${generator_sh_file}
+        DEPENDS             ${target_file}
+#        DEPENDS             ${src_file}
+#        COMMENT             "generating ${target_file}"
+    ) 
+
+    add_dependencies(
+        ${target}
+        ${custom_target}
+    )
+
+endforeach()
+
+

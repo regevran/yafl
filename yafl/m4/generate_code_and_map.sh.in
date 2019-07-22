@@ -4,7 +4,7 @@
 # SOURCE_FILE               ==      ${SOURCE_FILE}
 # TARGET_FILE               ==      ${TARGET_FILE}
 # MAP_TARGET_FILE           ==      ${MAP_TARGET_FILE}
-# YAFL_PREPROCESSOR_DIR    ==      ${YAFL_PREPROCESSOR_DIR}
+# YAFL_PREPROCESSOR_DIR     ==      ${YAFL_PREPROCESSOR_DIR}
 
 fileId=$(md5sum ${SOURCE_FILE} | head -c16)
 echo -n "'0x$fileId':[\"${SOURCE_FILE}\",{" >${MAP_TARGET_FILE}

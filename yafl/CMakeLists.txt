@@ -16,6 +16,17 @@ set( FIND_LIBRARY_USE_LIB64_PATHS ON )
 # project
 project( yafl )
 
+set(
+    YAFL_SOURCE_DIR
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+set(
+    GLOBAL_PROJECT
+    ${PROJECT_NAME}
+)
+
+
 find_package( Threads )
 
 # compiler flags
@@ -39,8 +50,7 @@ set(
 # directories
 subdirs( 
     infra
-    # logger
-    # m4
+    logger/m4log
 )
 
 

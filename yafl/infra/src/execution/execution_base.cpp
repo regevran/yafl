@@ -10,11 +10,10 @@
 // Include files
 //------------------------------------------------------------------------------
 
-#include "execution_base.h"
-#include "owner_execution.h"
-#include "msg.h"
+#include "infra/inc/execution/execution_base.h"
+#include "infra/inc/execution/owner_execution.h"
 
-namespace rf {
+namespace infra {
 
 
 ExecutionBase::ExecutionBase()
@@ -76,7 +75,6 @@ void ExecutionBase::mainEntryPoint( ExecutionBase& execution )
     }
     catch ( ... )
     {
-        RF_LOG_ERROR( "caught exception from MainExecution, closing thread" );
         std::exit( -1 );
     } 
 

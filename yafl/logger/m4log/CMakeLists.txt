@@ -1,5 +1,4 @@
 
-cmake_minimum_required( VERSION 3.11 )
 
 set(
     target
@@ -28,13 +27,13 @@ add_library(
 
 target_link_libraries( 
     ${target}
-    Infra
+    ${GLOBAL_PROJECT}_infra
 )
 
-add_dependencies(
-    ${target}
-    LoggerInc
-)
+#add_dependencies(
+#    ${target}
+#    LoggerInc
+#)
 
 set(
     files_to_precompile 
@@ -42,11 +41,12 @@ set(
     BulkLog.h
     LogHandler.cpp
     LogHandler.h
+    log.h
     log.cpp
     m4log_defs.cpp
 )
 
 # yafl-pre-compile
-include( ${IP_SOURCE_DIR}/custom.build/log_precompile.cmake ) 
+include( ${YAFL_SOURCE_DIR}/custom.build/log_precompile.cmake ) 
 
         

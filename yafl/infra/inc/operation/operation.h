@@ -11,7 +11,7 @@
 #ifndef OPERATION_H
 #define OPERATION_H
 
-namespace rf{
+namespace infra{
 
 class Operation
 {

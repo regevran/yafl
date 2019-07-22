@@ -36,5 +36,5 @@ set(
     main.cpp         
 )
 
-include( ${IP_SOURCE_DIR}/custom.build/log_precompile.cmake )
+include( ${YAFL_SOURCE_DIR}/custom.build/log_precompile.cmake )
 
