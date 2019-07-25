@@ -1,8 +1,8 @@
 
 #include <iomanip>
-#include "thread_queue/thread_queue_counter.h"
+#include "infra/inc/thread_queue/thread_queue_counter.h"
 
-namespace rf{
+namespace infra{
 namespace thread_queue{
 
 ThreadQueueCounter::ThreadQueueCounter(  const std::string& qName, unsigned long capacity )
@@ -11,26 +11,6 @@ ThreadQueueCounter::ThreadQueueCounter(  const std::string& qName, unsigned long
     _capacity( capacity )
 {
     reset();
-}
-
-ThreadQueueCounter::ThreadQueueCounter( const ThreadQueueCounter& rhs )
-    :
-    _qName( rhs._qName ),
-    _capacity( rhs._capacity )
-{
-    *this = rhs;
-}
-
-ThreadQueueCounter& ThreadQueueCounter::operator =( const ThreadQueueCounter& rhs )
-{
-    _pushed = rhs._pushed;
-    _pushRequest = rhs._pushRequest;
-    _popped = rhs._popped;
-    _dropped = rhs._dropped; 
-    _qSize = rhs._qSize;
-    _highestSize = rhs._highestSize;
-
-    return *this;
 }
 
 ThreadQueueCounter::~ThreadQueueCounter()
@@ -50,6 +30,12 @@ void ThreadQueueCounter::reset()
 void ThreadQueueCounter::pushed( unsigned long counter )
 {
     _pushed += counter;
+
+    _qSize += counter;
+    if ( _qSize > _highestSize )
+    {
+        _highestSize = _qSize;
+    }
 }
 
 void ThreadQueueCounter::pushRequested( unsigned long count )
@@ -60,6 +46,7 @@ void ThreadQueueCounter::pushRequested( unsigned long count )
 void ThreadQueueCounter::popped( unsigned long counter )
 {
     _popped += counter;
+    _qSize -= counter;
 }
 
 void ThreadQueueCounter::dropped( unsigned long counter ) 
@@ -67,20 +54,15 @@ void ThreadQueueCounter::dropped( unsigned long counter )
     _dropped += counter;
 }
 
-void ThreadQueueCounter::size( unsigned long qSize ) 
+unsigned long ThreadQueueCounter::size() const
 {
-    _qSize = qSize;
-
-    if ( _qSize > _highestSize )
-    {
-        _highestSize = _qSize;
-    }
+    return _qSize;
 }
 
 std::ostream& operator << ( std::ostream& o, const ThreadQueueCounter tqc )
 {
     o.imbue(std::locale(""));
-    o << std::endl <<
+    o << 
         tqc._qName << std::endl <<
         "capacity: " << std::setw(20) << std::right << tqc._capacity << std::endl <<
         "current: " << std::setw(20) << std::right << tqc._qSize << std::endl << 

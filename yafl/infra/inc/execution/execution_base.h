@@ -1,10 +1,3 @@
-//==============================================================================
-//  File name	:	execution_base.h
-//  Author:		:	Ran Regev
-//  date		: 	28/08/2013
-//==============================================================================
-// Notes: base class for all radifow executions 	
-//==============================================================================
 
 #ifndef EXECUTION_BASE_H
 #define EXECUTION_BASE_H
@@ -14,9 +7,11 @@
 
 namespace infra {
 
+#define nullptr 0
+
 template<class E> class OwnerExecution;
 
-class ExecutionBase : public infra::Joinable
+class ExecutionBase : public Joinable
 {
     public:
         ExecutionBase();

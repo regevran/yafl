@@ -1,23 +1,17 @@
 
 #include <iostream>
 #include <thread>
-#include "logger/inc/msg_t.h"
+#include "logger/inc/m4log_defs.h"
+#include "logger/inc/log.h"
+#include "series.h"
+
 
 
 int main()
 {
-    STDERR( " kabala ", " shemesh ", "40 miles ", 345 );
-    return 0;
-}
+//    yafl::log::g_logQ.start();
 
-
-
-# if 0
-int main()
-{
-    yafl::log::g_logQ.start();
-
-    const unsigned long ITERATIONS = 10;
+    const unsigned long ITERATIONS = 1000000;
 
 
     ///  fast log  ///
@@ -29,42 +23,24 @@ int main()
         s1.fast();
     } 
 
-    std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
+    //std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
 
-    std::chrono::steady_clock::time_point start;
-    std::chrono::steady_clock::time_point end;
+    std::chrono::high_resolution_clock::time_point start;
+    std::chrono::high_resolution_clock::time_point end;
 
     s1.getTimes( start, end ); 
     auto fastCount = std::chrono::duration_cast<std::chrono::microseconds>(end-start).count();
+    double messegesPerSecond = (double)s1.getCallCount() / (double)fastCount * 1000000;
 
-    LOG_DEMO_INFO( "calculation time (us):", fastCount );
-    std::cout << "fast log calculation time (us):" << fastCount << std::endl; 
+    LOG_DEMO_INFO( "messages per second: ", messegesPerSecond, "; calculation time (us):", fastCount, "; total messages:", s1.getCallCount() );
+    std::cout << "messages per second: " << messegesPerSecond << "; calculation time (us):" << fastCount << "; total messages:" << s1.getCallCount() << std::endl;
 
-    yafl::log::g_logQ.stop();
-    yafl::log::g_logQ.join(); 
+//    yafl::log::g_logQ.stop();
+//    yafl::log::g_logQ.join(); 
 
-    ///  log 4 cpp  ///
-    /*
-
-    Series s2( 1, ITERATIONS );
-
-    for ( unsigned long i = 0; i < ITERATIONS; ++ i )
-    {
-        s3.log4cpp();
-    } 
-    s2.getTimes( start, end ); 
-    auto log4cppCount = std::chrono::duration_cast<std::chrono::microseconds>(end-start).count();
-
-    std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
-
-    std::cout << "log4cpp calculation time (us):" << log4cppCount << std::endl; 
-
-
-    std::cout << "fast is : " << log4cppCount / fastCount << " times faster" << std::endl;
-    */
 
     return 0;
 }
-#endif
+
 
 

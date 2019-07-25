@@ -2,7 +2,7 @@
 #ifndef __THREAD_QUEUE_HANDLER__
 #define __THREAD_QUEUE_HANDLER__
 
-namespace rf{
+namespace infra{
 namespace thread_queue{
 
 template <class T>

@@ -5,26 +5,25 @@
 #include <ostream>
 #include <string>
 
-namespace rf{
+namespace infra{
 namespace thread_queue{
 
 class ThreadQueueCounter
 {
     public:
         ThreadQueueCounter( const std::string& qName, unsigned long capacity );
-        ThreadQueueCounter( const ThreadQueueCounter& );
         ~ThreadQueueCounter();
-
-        ThreadQueueCounter& operator =( const ThreadQueueCounter& rhs );
 
     public:
         void pushed( unsigned long count = 1 );
         void pushRequested( unsigned long count = 1 );
         void popped( unsigned long count = 1 );
         void dropped( unsigned long count = 1 ); 
-        void size( unsigned long qSize ); 
 
     public:
+        unsigned long size() const;
+
+    private:
         void reset();
 
     private:

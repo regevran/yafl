@@ -1,9 +1,8 @@
-//==============================================================================
-//  File name	        :	execution_base.cpp
-//  Author:		:	Ran Regev
-//  date		: 	28/08/2013
+
 //==============================================================================
 // Notes:  Implementation of execution base
+// we do NOT expect that execution objects will be called from multiple
+// contexts. In other words, Execution is not thread safe by its own
 //==============================================================================
 
 //------------------------------------------------------------------------------
@@ -30,15 +29,18 @@ ExecutionBase::~ExecutionBase()
 
 void ExecutionBase::start()
 {
-    // setting _IsStopped lets the new created thread a chance
-    // to run before this function (Start) finishes
-    _isStopped = false;
+    if ( isStopped()  )
+    {
+        // setting _IsStopped lets the new created thread a chance
+        // to run before this function (Start) finishes
+        _isStopped = false;
 
-    // create temporary thread and start its execution
-    std::thread tmpThread( ExecutionBase::mainEntryPoint, std::ref( *this ) );
+        // create temporary thread and start its execution
+        std::thread tmpThread( ExecutionBase::mainEntryPoint, std::ref( *this ) );
 
-    // keep the running thread in this object
-    tmpThread.swap( _thisExecutionThread );
+        // keep the running thread in this object
+        tmpThread.swap( _thisExecutionThread );
+    }
 }
 
 void ExecutionBase::stop()
@@ -73,8 +75,13 @@ void ExecutionBase::mainEntryPoint( ExecutionBase& execution )
     {
         execution._endStatus = execution.mainExecution();
     }
+    catch ( std::exception& e )
+    {
+        //STDERR( "caught exception from MainExecution: [[e.what()]]" );
+    }
     catch ( ... )
     {
+        //STDERR( "caught exception from MainExecution. exiting." );
         std::exit( -1 );
     } 
 

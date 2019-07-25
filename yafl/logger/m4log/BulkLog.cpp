@@ -20,7 +20,7 @@ BulkLog::~BulkLog()
     flush();
 } 
 
-void BulkLog::push_back( const Log& l )
+void BulkLog::push( const Log& l )
 {
     _bulk.push_back( l );
 

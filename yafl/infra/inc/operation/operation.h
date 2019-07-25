@@ -1,12 +1,3 @@
-//==============================================================================
-//  File name	        :	operation.h
-//  Author:		:	Ran Regev
-//  date		: 	28/08/2013
-//==============================================================================
-// Notes: Operation to execute must end with a reasonable time,
-// letting the execution manager a chance to stop the execution.
-// do not write code that blocks forever!.
-//==============================================================================
 
 #ifndef OPERATION_H
 #define OPERATION_H

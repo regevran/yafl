@@ -7,6 +7,6 @@ execute_process(
 
 configure_file( 
     ${READER_DIR}/reader.py.in 
-    ${MAP_DIR}/Logger/reader/reader.py
+    ${MAP_DIR}/logger/reader/reader.py
 )
 

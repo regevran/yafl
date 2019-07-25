@@ -2,42 +2,44 @@
 
 set(
     target
-    ${GLOBAL_PROJECT}_infra
+    infra
 )
 
-# library
+project( ${target} )
+
+option( BUILD_STATIC_LIBS "infra static" OFF )
+option( BUILD_SHARED_LIBS "infra shared" ON )
+
+
+add_subdirectory( "inc/counter" )
+add_subdirectory( "inc/execution" )
+add_subdirectory( "inc/thread_queue" )
+add_subdirectory( "inc/operation" )
+add_subdirectory( "src/counter" )
+add_subdirectory( "src/execution" )
+add_subdirectory( "src/thread_queue" )
+
+
+
+include_directories( ${CMAKE_CURRENT_BINARY_DIR}/../ )
+
+
 add_library( 
-    ${target}
-    SHARED
-    ${source}
+    ${target} 
+    ${source} 
 )
 
 target_link_libraries( 
     ${target}
-    ${GLOBAL_PROJECT}_infra_execution_h
+    pthread
 )
 
+# log precompile
+set(
+    files_to_precompile 
+    ${files_to_precompile}
+    inc/joinable.h
+)
 
-#
-#set(
-#    files_to_precompile 
-#    inc/execution/execution_forever.h
-#    inc/execution/execution_base.h
-#    inc/execution/owner_execution.h
-#    inc/operation/operation.h
-#    inc/joinable.h
-#    inc/thread_queue/thread_queue_counter.h
-#    inc/thread_queue/thread_queue_handler.h
-#    inc/thread_queue/thread_queue.h
-#    inc/thread_queue/thread_queue_owner.h
-#    /src/execution/execution_base.cpp
-#    /src/execution/execution_forever.cpp      
-#    /src/thread_queue/thread_queue_counter.cpp
-#)
-#
-## yafl-pre-compile
-#include( ${YAFL_SOURCE_DIR}/custom.build/log_precompile.cmake ) 
-#
-#
-#
-#
+include( ${YAFL_SOURCE_DIR}/custom.build/log_precompile.cmake )
+

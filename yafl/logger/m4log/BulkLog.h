@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "logger/m4log/log.h"
+#include "logger/inc/log.h"
 #include <fstream>
 #include <vector>
 
@@ -20,7 +20,7 @@ class BulkLog
         ~BulkLog();
 
     public:
-        void push_back( const Log& );
+        void push( const Log& );
 
     private:
         void flush();

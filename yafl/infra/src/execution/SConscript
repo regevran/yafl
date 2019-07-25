@@ -1,0 +1,31 @@
+
+# import all variables
+Import('*') 
+
+include = [
+    '../../inc',
+    '../../inc/execution',
+    '../../inc/operation',
+]
+
+local_env = env.Clone( CPPPATH = include )
+
+
+# define sources
+sources = [ 
+    'execution_at.cpp',
+    'execution_base.cpp',
+    'execution_count.cpp',
+    'execution_countdown.cpp',
+    'execution_forever.cpp',
+    'execution_notification.cpp',
+    'execution_once.cpp',
+    'execution_period.cpp',
+    'execution_suspend.cpp',
+]
+
+objs = local_env.SharedObject( source = sources )
+
+
+Return( 'objs' )
+

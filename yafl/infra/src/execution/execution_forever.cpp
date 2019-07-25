@@ -1,10 +1,4 @@
-//==============================================================================
-//  File name	        :	execution_forever.cpp
-//  Author:		:	Ran Regev
-//  date		: 	28/08/2013
-//==============================================================================
-// Notes:  Implementation of execution forever
-//==============================================================================
+
 ///==============================================================================
 // TODO:  Setting preOp and postOp is not safe in case of two or more
 // threads that try to set them at the same time.
@@ -18,6 +12,7 @@
 //------------------------------------------------------------------------------
 
 #include "infra/inc/execution/execution_forever.h"
+#include "infra/inc/execution/owner_execution.h"
 #include "infra/inc/operation/operation.h"
 
 namespace infra {
@@ -26,14 +21,16 @@ ExecutionForever::ExecutionForever(
     Operation& loopOp, 
     Operation* pPreOp,
     Operation* pPostOp,
-    unsigned long sleepTimeS
+    std::chrono::microseconds sleepTimeM
 )
-    :
+    : 
     _loopOp( loopOp ),
     _pPreOp( pPreOp ),
     _pPostOp( pPostOp ),
-    _sleepTimeS( sleepTimeS )
+    _sleepTimeM( sleepTimeM ),
+    _owner( nullptr )
 {
+    _shouldSleep = _sleepTimeM != std::chrono::microseconds(0);
 }
 
 ExecutionForever::~ExecutionForever()
@@ -42,10 +39,23 @@ ExecutionForever::~ExecutionForever()
 
 void ExecutionForever::stop()
 {
+    resume(); 
     ExecutionBase::stop();
+}
 
-    // this does not work. It does not stops the sleep_until function
-    _absoluteSleep = std::chrono::system_clock::now(); 
+void ExecutionForever::update()
+{
+    _loopOp.Update();
+}
+
+void ExecutionForever::pause()
+{
+//        _pause.lock();
+}
+
+void ExecutionForever::resume()
+{
+//        _pause.unlock();
 }
 
 Operation* ExecutionForever::setPreOperation( Operation* preOp )
@@ -69,6 +79,16 @@ Operation* ExecutionForever::setPostOperation( Operation* postOp )
     return ret;
 }
 
+void ExecutionForever::owner( OwnerExecution<ExecutionForever>* owner )
+{
+    _owner = owner;
+}
+
+OwnerExecution<ExecutionForever>* ExecutionForever::owner()
+{
+    return _owner;
+}
+
 bool ExecutionForever::mainExecution()
 {
     bool isOK( true );
@@ -80,13 +100,18 @@ bool ExecutionForever::mainExecution()
 
     while ( ( ! isStopped() ) && ( isOK ) )
     {
-        isOK = _loopOp.Operate();
+//        _pause.lock();
 
-        if ( isOK && _sleepTimeS )
+        if ( ! isStopped() )
         {
-            _absoluteSleep = std::chrono::system_clock::now();
-            _absoluteSleep += std::chrono::seconds( _sleepTimeS );
-            std::this_thread::sleep_until( _absoluteSleep ); 
+            isOK = _loopOp.Operate();
+        }
+
+//        _pause.unlock();
+
+        if ( _shouldSleep && isOK )
+        {
+            // removed beccause of older g++: std::this_thread::sleep_for( _sleepTimeM ); 
         }
     }
 
@@ -99,5 +124,13 @@ bool ExecutionForever::mainExecution()
     return isOK;
 }
 
+void ExecutionForever::done()
+{
+    if ( _owner )
+    {
+        _owner->done( this );
+    }
 }
 
+
+}

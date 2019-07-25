@@ -1,7 +1,7 @@
 
-#pragma once
+#include <chrono>
 
-#include <log4cpp/Category.hh>
+#pragma once
 
 class Series
 {
@@ -17,26 +17,25 @@ class Series
 
     public:
         void fast();
-        void log4cpp();
+
+    public:
+        unsigned long getCallCount() const;
 
         void getTimes( 
-            std::chrono::steady_clock::time_point& start,
-            std::chrono::steady_clock::time_point& end
+            std::chrono::high_resolution_clock::time_point& start,
+            std::chrono::high_resolution_clock::time_point& end
         );
 
     private:
-        int             _callCount;
+        unsigned long   _callCount;
         unsigned long   _startCountAt;
         unsigned long   _stopCountAt;
 
     private:
-        std::chrono::steady_clock::time_point _start;
-        std::chrono::steady_clock::time_point _end;
+        std::chrono::high_resolution_clock::time_point _start;
+        std::chrono::high_resolution_clock::time_point _end;
 
     private:
-//        log4cpp::Category&   _logger;
 };
-
-
 
 

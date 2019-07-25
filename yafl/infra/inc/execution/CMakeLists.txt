@@ -1,30 +1,18 @@
 
-set(
-    target
-    ${GLOBAL_PROJECT}_infra_execution_h
-)
-
+# log precompile
 set(
     files_to_precompile 
-    execution_forever.h
-    execution_base.h
-    owner_execution.h
-)
-
-set(
-    source
     ${files_to_precompile}
+    inc/execution/execution_at.h
+    inc/execution/execution_base.h
+    inc/execution/execution_count.h
+    inc/execution/execution_countdown.h
+    inc/execution/execution_forever.h
+    inc/execution/execution_notification.h
+    inc/execution/execution_once.h
+    inc/execution/execution_period.h
+    inc/execution/execution_suspend.h
+    inc/execution/owner_execution.h
     PARENT_SCOPE
 )
-
-add_custom_target( 
-    ${target}
-    DEPENDS ${files_to_precompile}
-)
-
-# yafl-pre-compile
-include( ${YAFL_SOURCE_DIR}/custom.build/log_precompile.cmake ) 
-
-
-
 

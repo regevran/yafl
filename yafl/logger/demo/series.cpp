@@ -1,9 +1,8 @@
 
-#include "logger/m4log/log.h"
+#include "logger/inc/log.h"
+#include "logger/inc/m4log_defs.h"
 #include "series.h"
 #include <thread>
-#include <log4cpp/PropertyConfigurator.hh>
-#include "logger/inc/a.h"
 
 Series::Series( 
             unsigned long startCountAt,
@@ -11,13 +10,8 @@ Series::Series(
     : 
     _callCount( 0 ),
     _startCountAt( startCountAt ),
-    _stopCountAt( stopCountAt ) //,
-//    _logger( log4cpp::Category::getInstance( "serieslog" ) )
+    _stopCountAt( stopCountAt )
 {
-    //log4cpp::PropertyConfigurator::configure("../log4cpp.ini");
-
-    A a;
-    a.f();
 }
 
 Series::~Series()
@@ -31,50 +25,56 @@ void Series::reset()
 
 void Series::fast()
 {
-
     ++ _callCount;
 
     if ( _startCountAt == _callCount )
     {
-        _start = std::chrono::steady_clock::now();
+        _start = std::chrono::high_resolution_clock::now();
     } 
 
     // the work
-    YAFL_LOG( YAFL_INFO, "dana", "fast was called: ", _callCount, " times" ); 
-    std::this_thread::sleep_for( std::chrono::milliseconds( 3 ) );
+    switch ( _callCount % 4 )
+    {
+        case 0: 
+        {
+            LOG_DEMO_DEBUG( "fast was called: ", _callCount, " times" ); 
+        }
+        break;
+
+        case 1: 
+        {
+            LOG_DEMO_ERROR( "call count can't be ", _callCount, " but it is!" ); 
+        }
+        break;
+
+        case 2: 
+        {
+            LOG_DEMO_WARNING( _callCount, " is odd" ); 
+        }
+        break;
+
+        case 3: 
+        {
+            LOG_DEMO_INFO( "start count at:", _startCountAt, "; stop count at: ", _stopCountAt, "; current count: ", _callCount ); 
+        }
+        break;
+    }
     // end the work
 
     if ( _stopCountAt == _callCount )
     {
-        _end = std::chrono::steady_clock::now();
+        _end = std::chrono::high_resolution_clock::now();
     }
 }
 
-void Series::log4cpp()
+unsigned long Series::getCallCount() const
 {
-
-    /*
-    ++ _callCount;
-
-    if ( _startCountAt == _callCount )
-    {
-        _start = std::chrono::steady_clock::now();
-    } 
-
-    // the work
-    _logger << log4cpp::Priority::DEBUG << "slow-check" << "log4cpp was called: " << _callCount << " times"; 
-    // end the work
-
-    if ( _stopCountAt == _callCount )
-    {
-        _end = std::chrono::steady_clock::now();
-    }
-    */
+    return _callCount;
 }
 
 void Series::getTimes( 
-        std::chrono::steady_clock::time_point& start,
-        std::chrono::steady_clock::time_point& end
+        std::chrono::high_resolution_clock::time_point& start,
+        std::chrono::high_resolution_clock::time_point& end
 )
 {
     start = _start;

@@ -22,6 +22,11 @@ set(
 )
 
 set(
+    YAFL_BINARY_DIR
+    ${CMAKE_CURRENT_BINARY_DIR}
+)
+
+set(
     GLOBAL_PROJECT
     ${PROJECT_NAME}
 )
@@ -33,6 +38,7 @@ find_package( Threads )
 add_compile_options( 
     -Wall
     -Werror
+    -O3
 )
 
 # build type settings
@@ -49,9 +55,11 @@ set(
 
 # directories
 subdirs( 
-    infra/inc/execution
     infra/
     logger/m4log
+    logger/inc
+    logger/demo
+    logger/reader
 )
 
 

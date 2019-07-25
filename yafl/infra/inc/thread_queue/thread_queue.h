@@ -2,27 +2,27 @@
 #ifndef __THREAD_QUEUE__
 #define __THREAD_QUEUE__
 
-#include "execution/execution_forever.h"
-#include "execution/owner_execution.h"
-#include "joinable.h"
-#include "msg.h"
-#include "operation/operation.h"
+#include "infra/inc/execution/execution_forever.h"
+#include "infra/inc/execution/owner_execution.h"
+#include "infra/inc/joinable.h"
+#include "infra/inc/operation/operation.h"
 #include "thread_queue_counter.h"
 #include "thread_queue_handler.h"
 #include "thread_queue_owner.h"
 #include <chrono>
 #include <condition_variable>
 #include <mutex>
+//#include <deque>
 #include <queue>
 
-namespace rf{
+namespace infra{
 namespace thread_queue{
 
 template< class T>
 class ThreadQueue : 
-    public rf::Operation,
-    public rf::Joinable,
-    public rf::OwnerExecution< rf::ExecutionForever > 
+    public infra::Operation,
+    public infra::Joinable,
+    public infra::OwnerExecution< infra::ExecutionForever > 
 {
     public:
         ThreadQueue( 
@@ -33,13 +33,10 @@ class ThreadQueue :
                 ThreadQueueOwner<T>* owner = nullptr
        );
 
-       ThreadQueue( const ThreadQueue& ) = delete;
-       ThreadQueue( const ThreadQueue&& ) = delete;
-
        virtual ~ThreadQueue();
 
     public:
-       ThreadQueueHandler<T>* getHandler() const;
+       ThreadQueueHandler<T>* getHandler();
 
        // sets new handler, returns the old handler
        ThreadQueueHandler<T>* replaceHandler( ThreadQueueHandler<T>* newHandler );
@@ -49,10 +46,6 @@ class ThreadQueue :
         virtual void stop();
         virtual void join();
         virtual void detach();
-
-    public:
-        void pause();
-        void resume();
 
     public:
         // get notification when the internal thread is done
@@ -74,8 +67,8 @@ class ThreadQueue :
 
     private:
         const unsigned long         _maxQueueSize;
-        std::mutex                  _mutexHandler;
         ThreadQueueHandler<T>*      _handler;
+        //std::deque<T>               _queue;
         std::queue<T>               _queue;
         std::mutex                  _queueLock;
     private:
@@ -85,15 +78,14 @@ class ThreadQueue :
         std::chrono::milliseconds   _stopLatency;
 
     private:
-        rf::ExecutionForever        _readerExecution; 
+        infra::ExecutionForever        _readerExecution; 
 
     private:
         ThreadQueueOwner<T>*        _owner;
 
     private:
         const std::string           _qName;
-        ThreadQueueCounter          _theCounter;
-        bool                        _bPaused;
+        ThreadQueueCounter          _counter;
 };
 
 
@@ -110,9 +102,9 @@ ThreadQueue<T>::ThreadQueue(
     _readerExecution( *this, nullptr, nullptr, std::chrono::microseconds(0) ),
     _owner( owner ),
     _qName( qName ),
-    _theCounter( _qName, _maxQueueSize ),
-    _bPaused( false )
+    _counter( _qName, _maxQueueSize )
 {
+//    _queue.resize( _maxQueueSize );
     _readerExecution.owner( this );
 }
 
@@ -122,7 +114,7 @@ ThreadQueue<T>::~ThreadQueue()
 }
 
 template< class T>
-ThreadQueueHandler<T>* ThreadQueue<T>::getHandler() const
+ThreadQueueHandler<T>* ThreadQueue<T>::getHandler()
 {
     return _handler;
 }
@@ -130,9 +122,12 @@ ThreadQueueHandler<T>* ThreadQueue<T>::getHandler() const
 template< class T>
 ThreadQueueHandler<T>* ThreadQueue<T>::replaceHandler( ThreadQueueHandler<T>* newHandler )
 {
-    std::lock_guard<std::mutex> lock( _mutexHandler );
+    _readerExecution.pause();
+
     ThreadQueueHandler<T>* ret = _handler;
     _handler = newHandler;
+
+    _readerExecution.resume();
 
     return ret;
 }
@@ -172,18 +167,6 @@ void ThreadQueue<T>::detach()
 }
 
 template< class T>
-void ThreadQueue<T>::pause()
-{
-    _bPaused = true;
-}
-
-template< class T>
-void ThreadQueue<T>::resume()
-{
-    _bPaused = false;
-}
-
-template< class T>
 void ThreadQueue<T>::done( ExecutionForever* )
 {
     if ( _owner )
@@ -199,16 +182,9 @@ bool ThreadQueue<T>::push( const T& t )
 
     std::lock_guard< std::mutex > lg( _queueLock );
 
-    _theCounter.pushRequested();
+    _counter.pushRequested();
 
-    if ( _bPaused )
-    {
-        _theCounter.dropped();
-        ret = false;
-        return ret;
-    } 
-
-    int queueSize = _queue.size();
+    unsigned long queueSize = _counter.size();
 
     if ( 0 == queueSize )
     {
@@ -218,15 +194,13 @@ bool ThreadQueue<T>::push( const T& t )
     if ( queueSize < _maxQueueSize )
     {
         _queue.push( t );
-
-        _theCounter.pushed();
-        _theCounter.size( queueSize );
+        _counter.pushed();
 
         ret = true;
     }
     else
     {
-        _theCounter.dropped();
+        _counter.dropped();
         ret = false;
     }
 
@@ -238,7 +212,7 @@ bool ThreadQueue<T>::empty()
 {
     std::lock_guard< std::mutex > lg( _queueLock ); 
 
-    return _queue.empty();
+    return _counter.size() == 0;
 }
 
 template< class T>
@@ -252,7 +226,7 @@ bool ThreadQueue<T>::Operate()
 {
     _queueLock.lock();
 
-    if ( ! _queue.empty() )
+    if ( ! _counter.size() == 0 )
     {
         // creates a copy of the element in the queue.
         // this allows unlocking the queue before handeling
@@ -261,17 +235,13 @@ bool ThreadQueue<T>::Operate()
         T t = _queue.front();
         _queue.pop();
 
-        _theCounter.popped();
-        _theCounter.size( _queue.size() );
+        _counter.popped();
 
         _queueLock.unlock();
 
+        if ( _handler )
         {
-            std::lock_guard<std::mutex> lock( _mutexHandler );
-            if ( _handler )
-            {
-                _handler->handleQueueElement( t );
-            }
+            _handler->handleQueueElement( t );
         }
     }
     else
@@ -289,13 +259,13 @@ bool ThreadQueue<T>::Operate()
 template< class T>
 const ThreadQueueCounter& ThreadQueue<T>::getCounter() const
 {
-    return _theCounter;
+    return _counter;
 }
 
 template< class T>
 ThreadQueueCounter& ThreadQueue<T>::getCounter()
 {
-    return _theCounter;
+    return _counter;
 }
 
 }}

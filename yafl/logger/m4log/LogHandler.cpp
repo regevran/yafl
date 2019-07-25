@@ -21,7 +21,7 @@ LogHandler::~LogHandler()
 
 void LogHandler::handleQueueElement( Log& l )
 {
-    _bulk.push_back( l );
+    _bulk.push( l );
 }
 
 }}

@@ -2,7 +2,7 @@
 
 set(
     target
-    LoggerM4Log
+    logger_m4log
 )
 
 project( ${target} )
@@ -30,10 +30,10 @@ add_library(
 #    ${GLOBAL_PROJECT}_infra
 #)
 
-#add_dependencies(
-#    ${target}
-#    LoggerInc
-#)
+add_dependencies(
+    ${target}
+    logger_inc
+)
 
 set(
     files_to_precompile 
@@ -41,7 +41,6 @@ set(
     BulkLog.h
     LogHandler.cpp
     LogHandler.h
-    log.h
     log.cpp
     m4log_defs.cpp
 )

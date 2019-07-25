@@ -2,7 +2,7 @@
 #pragma once
 
 #include "BulkLog.h"
-#include "logger/m4log/log.h"
+#include "logger/inc/log.h"
 #include "infra/inc/thread_queue/thread_queue_handler.h"
 
 namespace yafl{

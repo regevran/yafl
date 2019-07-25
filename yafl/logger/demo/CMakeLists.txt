@@ -2,7 +2,7 @@
 
 set(
     target
-    LoggerDemo
+    logger_demo
 )
 
 project( ${target} )
@@ -15,7 +15,7 @@ include_directories(
 set(
     sources
     ${CMAKE_CURRENT_BINARY_DIR}/main.cpp
-    #    ${CMAKE_CURRENT_BINARY_DIR}/series.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/series.cpp
 )
 
 # executable
@@ -26,14 +26,19 @@ add_executable(
 
 target_link_libraries( 
     ${target}
-    LoggerM4Log
-    Infra
+    logger_m4log
+    infra
 )
 
 # log precompile
 set(
     files_to_precompile 
     main.cpp         
+    msg.h
+    power.h
+    series.cpp
+    series.h
+
 )
 
 include( ${YAFL_SOURCE_DIR}/custom.build/log_precompile.cmake )
