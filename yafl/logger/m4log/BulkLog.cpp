@@ -32,7 +32,7 @@ void BulkLog::push( const Log& l )
 
 void BulkLog::flush()
 {
-    _logFile.write( reinterpret_cast<const char*>(_bulk.data()), sizeof(Log) * _bulk.size() );
+//    _logFile.write( reinterpret_cast<const char*>(_bulk.data()), sizeof(Log) * _bulk.size() );
     _bulk.clear();
 }
 

@@ -11,7 +11,7 @@ int main()
 {
 //    yafl::log::g_logQ.start();
 
-    const unsigned long ITERATIONS = 1000000;
+    const unsigned long ITERATIONS = 100000000;
 
 
     ///  fast log  ///
@@ -33,7 +33,7 @@ int main()
     double messegesPerSecond = (double)s1.getCallCount() / (double)fastCount * 1000000;
 
     LOG_DEMO_INFO( "messages per second: ", messegesPerSecond, "; calculation time (us):", fastCount, "; total messages:", s1.getCallCount() );
-    std::cout << "messages per second: " << messegesPerSecond << "; calculation time (us):" << fastCount << "; total messages:" << s1.getCallCount() << std::endl;
+    std::cout << "messages per second: " << std::fixed << messegesPerSecond << "; calculation time (us):" << fastCount << "; total messages:" << s1.getCallCount() << std::endl;
 
 //    yafl::log::g_logQ.stop();
 //    yafl::log::g_logQ.join(); 
