@@ -57,7 +57,7 @@ void BulkLog<BS>::push( const Log& l )
 template<unsigned long BS>
 void BulkLog<BS>::flush()
 {
-//    _logFile.write( reinterpret_cast<const char*>(_bulk.data()), sizeof(Log) * _bulk.size() );
+    _logFile.write( reinterpret_cast<const char*>(_bulk.data()), sizeof(Log) * _pos );
     _pos = 0;
 }
 

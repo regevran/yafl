@@ -9,9 +9,9 @@
 
 int main()
 {
-//    yafl::log::g_logQ.start();
+    yafl::log::g_logQ.start();
 
-    const unsigned long ITERATIONS = 100000000;
+    const unsigned long ITERATIONS = 1000000;
 
 
     ///  fast log  ///
@@ -23,7 +23,8 @@ int main()
         s1.fast();
     } 
 
-    //std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
+    // let the writing process finish its work
+    std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
 
     std::chrono::high_resolution_clock::time_point start;
     std::chrono::high_resolution_clock::time_point end;
@@ -35,8 +36,10 @@ int main()
     LOG_DEMO_INFO( "messages per second: ", messegesPerSecond, "; calculation time (us):", fastCount, "; total messages:", s1.getCallCount() );
     std::cout << "messages per second: " << std::fixed << messegesPerSecond << "; calculation time (us):" << fastCount << "; total messages:" << s1.getCallCount() << std::endl;
 
-//    yafl::log::g_logQ.stop();
-//    yafl::log::g_logQ.join(); 
+    std::cout << yafl::log::g_logQ.getCounter();
+
+    yafl::log::g_logQ.stop();
+    yafl::log::g_logQ.join(); 
 
 
     return 0;

@@ -64,13 +64,13 @@ std::ostream& operator << ( std::ostream& o, const ThreadQueueCounter tqc )
     o.imbue(std::locale(""));
     o << 
         tqc._qName << std::endl <<
-        "capacity: " << std::setw(20) << std::right << tqc._capacity << std::endl <<
-        "current: " << std::setw(20) << std::right << tqc._qSize << std::endl << 
-        "highest: " << std::setw(20) << std::right << tqc._highestSize << std::endl <<
-        "pushed: " << std::setw(20) << std::right << tqc._pushed << std::endl <<
+        "capacity:      " << std::setw(20) << std::right << tqc._capacity << std::endl <<
+        "current:       " << std::setw(20) << std::right << tqc._qSize << std::endl << 
+        "highest:       " << std::setw(20) << std::right << tqc._highestSize << std::endl <<
+        "pushed:        " << std::setw(20) << std::right << tqc._pushed << std::endl <<
         "push requests: " << std::setw(20) << std::right << tqc._pushRequest << std::endl <<
-        "popped: " << std::setw(20) << std::right << tqc._popped << std::endl <<
-        "dropped: " << std::setw(20) << std::right << tqc._dropped << std::endl;
+        "popped:        " << std::setw(20) << std::right << tqc._popped << std::endl <<
+        "dropped:       " << std::setw(20) << std::right << tqc._dropped << std::endl;
 
    if ( tqc._pushRequest )
    { 
