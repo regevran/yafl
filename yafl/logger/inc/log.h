@@ -2,7 +2,6 @@
 #pragma once
 
 //#include "m4log_defs.h"
-//
 #include <ostream>
 
 namespace yafl{

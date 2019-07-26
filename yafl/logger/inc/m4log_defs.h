@@ -10,9 +10,11 @@ namespace log{
 class Log;
 class LogHandler;
 
+constexpr const unsigned long LOG_BULK_SIZE = 10000;
+
 // THE log-q for Log messages
 //extern infra::thread_queue::ThreadQueue<Log>    g_logQ;
-extern BulkLog g_logQ;
+extern BulkLog<LOG_BULK_SIZE> g_logQ;
 
 
 }}

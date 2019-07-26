@@ -17,7 +17,7 @@ LogHandler g_logHandler( g_logFile, 10000 );
 infra::thread_queue::ThreadQueue<Log> g_logQ( "logQ", 10000000, &g_logHandler );
 */
 
-yafl::log::BulkLog g_logQ( g_logFile, 10000 );
+yafl::log::BulkLog<LOG_BULK_SIZE> g_logQ( g_logFile );
 
 
 }}

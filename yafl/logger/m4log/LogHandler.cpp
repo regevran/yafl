@@ -7,11 +7,8 @@ namespace yafl{
 namespace log{
 
 
-LogHandler::LogHandler( 
-    const std::string& logFileName,
-    unsigned long bulkSize 
-)
-    : _bulk( logFileName, bulkSize )
+LogHandler::LogHandler( const std::string& logFileName )
+    : _bulk( logFileName )
 {
 }
 
