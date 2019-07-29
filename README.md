@@ -1,7 +1,7 @@
 # yafl
 yet another fast log
 # Objective
-this project demonstartes a mechanism to create an exteremly fast and low foot print logging.
+The project demonstartes a mechanism to create an exteremly fast and low foot print logging.
 # Features
 * simple log writing
 * build system that takes care for everything
@@ -25,4 +25,15 @@ this project demonstartes a mechanism to create an exteremly fast and low foot p
     * yafl-grep (yet to implement)  
     * yafl-tail (yet to implement)
     * yafl-etc (etc.)
+    
+# BUILD
+download the repo
+it is a CMake project, create a build directory, cd into it and cmake this project
+when everything compiled run from the build directory ./logger/demo/logger_demo
+it runs current code in logger/demo/main.cpp whatever it is
+
+# Look Around
+Take a look at any: .cpp .h .sh and .map files in the binary directory.
+Take a look at the m4 directory to see how numbers are created from strings.
+
 
