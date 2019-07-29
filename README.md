@@ -28,9 +28,9 @@ The project demonstartes a mechanism to create an exteremly fast and low foot pr
     
 # BUILD
 download the repo
-it is a CMake project, create a build directory, cd into it and cmake this project
-when everything compiled run from the build directory ./logger/demo/logger_demo
-it runs current code in logger/demo/main.cpp whatever it is
+it is a CMake project, create a build directory, cd into it and cmake and make this project.
+When everything is compiled run from the build directory ./logger/demo/logger_demo
+it runs current code in logger/demo/main.cpp whatever it is.
 
 # Look Around
 Take a look at any: .cpp .h .sh and .map files in the binary directory.
