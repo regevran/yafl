@@ -33,7 +33,8 @@ When everything is compiled run from the build directory ./logger/demo/logger_de
 it runs current code in logger/demo/main.cpp whatever it is.
 
 # Look Around
-Take a look at any: .cpp .h .sh and .map files in the binary directory.
-Take a look at the m4 directory to see how numbers are created from strings.
+If you havn't already, take a look at the PDFs in the main directory. They give a brief introduction to what os going on here.
+Then you can take a look at any: .cpp .h .sh and .map files in the binary directory.
+And take a look at the m4 directory to see how numbers are created from strings.
 
 
