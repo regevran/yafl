@@ -18,6 +18,7 @@ LogHandler::~LogHandler()
 
 void LogHandler::handleQueueElement( Log& l )
 {
+    l.timestamp();
     _bulk.push( l );
 }
 

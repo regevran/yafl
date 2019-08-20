@@ -11,7 +11,7 @@ int main()
 {
     yafl::log::g_logQ.start();
 
-    const unsigned long ITERATIONS = 1000000;
+    const unsigned long ITERATIONS = 10000000;
 
 
     ///  fast log  ///
@@ -33,7 +33,13 @@ int main()
     auto fastCount = std::chrono::duration_cast<std::chrono::microseconds>(end-start).count();
     double messegesPerSecond = (double)s1.getCallCount() / (double)fastCount * 1000000;
 
+    unsigned long v1=100,v2=200,v3=300;
+
     LOG_DEMO_INFO( "messages per second: ", messegesPerSecond, "; calculation time (us):", fastCount, "; total messages:", s1.getCallCount() );
+    LOG_DEMO_DEBUG( "this text is mapped to unsigned long" );
+    LOG_DEMO_WARNING( "variables must be converted to long too:", v1, v2, v3 );
+
+
     std::cout << "messages per second: " << std::fixed << messegesPerSecond << "; calculation time (us):" << fastCount << "; total messages:" << s1.getCallCount() << std::endl;
 
     std::cout << yafl::log::g_logQ.getCounter();
