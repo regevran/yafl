@@ -21,6 +21,9 @@ class LogHandler : public infra::thread_queue::ThreadQueueHandler< Log >
 
     private:
         BulkLog<LOG_BULK_SIZE>     _bulk;
+
+    private:
+        unsigned long _timeSampleCounter = 0;
 };
 
 

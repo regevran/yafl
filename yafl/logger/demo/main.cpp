@@ -11,7 +11,8 @@ int main()
 {
     yafl::log::g_logQ.start();
 
-    const unsigned long ITERATIONS = 10000000;
+    const unsigned long ITERATIONS = 100;
+    //const unsigned long ITERATIONS = 10000000;
 
 
     ///  fast log  ///
@@ -24,7 +25,7 @@ int main()
     } 
 
     // let the writing process finish its work
-    std::this_thread::sleep_for( std::chrono::seconds( 1 ) );
+    std::this_thread::sleep_for( std::chrono::seconds( 3 ) );
 
     std::chrono::high_resolution_clock::time_point start;
     std::chrono::high_resolution_clock::time_point end;

@@ -18,7 +18,24 @@ LogHandler::~LogHandler()
 
 void LogHandler::handleQueueElement( Log& l )
 {
-    l.timestamp();
+    // system call not every message
+    // but rather, every TIMESTAMP_DELTA_MESSAGES messages
+    if ( 0 == _timeSampleCounter )
+    {
+        l.timestamp( true );
+    }
+    else
+    {
+        l.timestamp( false );
+   
+        ++ _timeSampleCounter;
+        
+        if ( TIMESTAMP_DELTA_MESSAGES == _timeSampleCounter )
+        {
+            _timeSampleCounter = 0;
+        }
+    }
+
     _bulk.push( l );
 }
 

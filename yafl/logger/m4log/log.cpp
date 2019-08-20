@@ -10,10 +10,14 @@ Log::~Log()
 {
 }
 
-void Log::timestamp()
+void Log::timestamp( bool sysCall )
 {
-    std::chrono::high_resolution_clock::time_point now = std::chrono::high_resolution_clock::now(); 
-    _fields[0] = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+    if ( sysCall )
+    {
+        _now = std::chrono::high_resolution_clock::now(); 
+    }
+
+    _fields[0] = std::chrono::duration_cast<std::chrono::milliseconds>(_now.time_since_epoch()).count();
 }
 
 std::ostream& operator<<( std::ostream& o, const Log& l )

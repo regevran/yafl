@@ -58,12 +58,12 @@ class Log
         ~Log();
 
     public:
-        void timestamp();
+        void timestamp( bool sysCall );
 
     private:
-         unsigned long _fields[ MAX_LOG_FIELDS ];
+        unsigned long _fields[ MAX_LOG_FIELDS ];
+        std::chrono::high_resolution_clock::time_point _now;
 
-    public:
         friend std::ostream& operator<<( std::ostream&, const Log& );
 };
 
