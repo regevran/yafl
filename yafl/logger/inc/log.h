@@ -2,7 +2,6 @@
 #pragma once
 
 #include <ostream>
-#include <chrono>
 
 namespace yafl{
 namespace log{
@@ -58,11 +57,10 @@ class Log
         ~Log();
 
     public:
-        void timestamp( bool sysCall );
+        constexpr void timestamp( unsigned long ticksSinceEpoch );
 
     private:
         unsigned long _fields[ MAX_LOG_FIELDS ];
-        std::chrono::high_resolution_clock::time_point _now;
 
         friend std::ostream& operator<<( std::ostream&, const Log& );
 };
@@ -93,15 +91,15 @@ constexpr Log::Log(
          unsigned long f21,
          unsigned long f22,
          unsigned long f23,
-         unsigned long f24,
-         unsigned long f25
+         unsigned long, // not used
+         unsigned long // not used
 ) noexcept 
     :
     _fields{ 
-        END_RECORD_MARK, // reserved for timestamp
+        0,//END_RECORD_MARK, // reserved for timestamp
         f1, f2, f3, f4, f5, f6, f7, f8, f9, f10,
         f11, f12, f13, f14, f15, f16, f17, f18, f19, f20,
-        f21, f22, f23,
+        f21, f22, f23, 
         // last element is hardcoded end of record mark
         END_RECORD_MARK
     } 
@@ -150,6 +148,12 @@ constexpr Log& Log::operator=( const Log& rhs )
     _fields[24] = rhs._fields[24];
     return *this;
 } 
+
+constexpr void Log::timestamp( unsigned long ticksSinceEpoch )
+{
+    _fields[0] = ticksSinceEpoch;
+}
+
 
 }}
 

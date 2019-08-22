@@ -22,14 +22,21 @@ void LogHandler::handleQueueElement( Log& l )
     // but rather, every TIMESTAMP_DELTA_MESSAGES messages
     if ( 0 == _timeSampleCounter )
     {
-        l.timestamp( true );
+        _ticksSinceEpoch = 
+            std::chrono::duration_cast<std::chrono::microseconds>(
+                std::chrono::high_resolution_clock::now().time_since_epoch()
+            ).count();
+
+        l.timestamp( _ticksSinceEpoch );
+
+        ++ _timeSampleCounter;
     }
     else
     {
-        l.timestamp( false );
+        l.timestamp( _ticksSinceEpoch );
    
         ++ _timeSampleCounter;
-        
+
         if ( TIMESTAMP_DELTA_MESSAGES == _timeSampleCounter )
         {
             _timeSampleCounter = 0;

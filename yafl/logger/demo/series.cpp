@@ -69,7 +69,14 @@ void Series::fast()
 
 unsigned long Series::getCallCount() const
 {
-    return _callCount;
+    if ( _callCount > _stopCountAt - _startCountAt )
+    {
+        return _stopCountAt - _startCountAt;
+    }
+    else
+    {
+        return _callCount;
+    }
 }
 
 void Series::getTimes( 
