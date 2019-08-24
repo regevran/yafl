@@ -1,14 +1,6 @@
 
-# executables defined for this cmake tree:
-# Analyzer
-# pace2_analyzer
-
 # cmake version
-cmake_minimum_required( VERSION 3.10 )
-
-# compilter (must be before any project() command)
-set( CMAKE_CXX_COMPILER         g++ )
-set( CMAKE_C_COMPILER           gcc ) 
+cmake_minimum_required( VERSION 3.15 )
 
 # cmake settings
 set( FIND_LIBRARY_USE_LIB64_PATHS ON )
@@ -25,12 +17,6 @@ set(
     YAFL_BINARY_DIR
     ${CMAKE_CURRENT_BINARY_DIR}
 )
-
-set(
-    GLOBAL_PROJECT
-    ${PROJECT_NAME}
-)
-
 
 find_package( Threads )
 
@@ -54,15 +40,6 @@ set(
 )
 
 # directories
-subdirs( 
-    infra/
-    logger/m4log
-    logger/inc
-    logger/demo
-    logger/reader
-)
-
-
-
-
+add_subdirectory( infra )
+add_subdirectory( logger )
 

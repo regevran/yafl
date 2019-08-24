@@ -1,37 +1,30 @@
 
 
 set(
-    target
+    LOGGER_M4LOG
     logger_m4log
 )
 
-project( ${target} )
-
-include_directories(
-    ${CMAKE_CURRENT_BINARY_DIR}/../../
-)
-
-set(
-    source
-    ${CMAKE_CURRENT_BINARY_DIR}/BulkLog.cpp
-    ${CMAKE_CURRENT_BINARY_DIR}/LogHandler.cpp
-    ${CMAKE_CURRENT_BINARY_DIR}/m4log_defs.cpp
-    ${CMAKE_CURRENT_BINARY_DIR}/log.cpp
-)
-
 # library
-add_library( 
-    ${target}
-    ${source}
+add_library( ${LOGGER_M4LOG} )
+
+target_sources(
+    ${LOGGER_M4LOG}
+    PRIVATE
+        ${CMAKE_CURRENT_BINARY_DIR}/BulkLog.cpp
+        ${CMAKE_CURRENT_BINARY_DIR}/LogHandler.cpp
+        ${CMAKE_CURRENT_BINARY_DIR}/m4log_defs.cpp
+        ${CMAKE_CURRENT_BINARY_DIR}/log.cpp
 )
 
-#target_link_libraries( 
-#    ${target}
-#    ${GLOBAL_PROJECT}_infra
-#)
+target_include_directories(
+    ${LOGGER_M4LOG}
+    PRIVATE
+        ${CMAKE_CURRENT_BINARY_DIR}/../../
+) 
 
 add_dependencies(
-    ${target}
+    ${LOGGER_M4LOG}
     logger_inc
 )
 
@@ -43,6 +36,11 @@ set(
     LogHandler.h
     log.cpp
     m4log_defs.cpp
+)
+
+set(
+    target
+    ${LOGGER_M4LOG}
 )
 
 # yafl-pre-compile
